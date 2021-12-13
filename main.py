@@ -9,7 +9,7 @@ GRASS = scale_image(pygame.image.load("imgs/grass.jpg"), 2.5)
 TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.5)
 FINISH = pygame.image.load("imgs/finish.png")
 
-RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.55)
+RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.55)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
@@ -43,7 +43,16 @@ class AbstractCar:
         self.move()
     
     def move(self):
-        self.x += self.vel
+        radians = math.radians(self.angle)
+        vertical = math.cos(radians) * self.vel
+        horizontal = math.sin(radians) * self.vel
+        
+        self.y -= vertical
+        self.x -= horizontal
+    
+    def reduce_speed(self):
+        self.vel = max(self.vel - self.acceleration / 2, 0)
+        self.move()
         
 class PlayerCar(AbstractCar):
     IMG = RED_CAR
@@ -73,13 +82,17 @@ while run:
             break
     
     keys = pygame.key.get_pressed()
+    moved = False
     
     if keys[pygame.K_a]:
         player_car.rotate(left=True)
     if keys[pygame.K_d]:
         player_car.rotate(right=True)
     if keys[pygame.K_w]:
+        move = True
         player_car.move_forward()
     
-
+    if not moved:
+        player_car.reduce_speed()
+    
 pygame.quit()
