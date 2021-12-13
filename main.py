@@ -7,6 +7,7 @@ TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.5)
 GRASS = scale_image(pygame.image.load("imgs/grass.jpg"), 2.5)
 
 TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.5)
+TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER)
 FINISH = pygame.image.load("imgs/finish.png")
 
 RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.55)
@@ -22,7 +23,7 @@ class AbstractCar:
     IMG = RED_CAR
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
-        self.max_vel = 1.5
+        self.max_vel = max_vel
         self.vel = 0
         self.rotation_vel = rotation_vel
         self.angle = 270
@@ -53,6 +54,11 @@ class AbstractCar:
         
         self.y -= vertical
         self.x -= horizontal
+    
+    def collide(self, mask, x=0, y=0):
+        car_mask = pygame.mask.from_surface(self.img)
+        offset = (int(self.x - x), int(self.y - y))
+        poi = mask.overlap(car_mask, offset)
         
 class PlayerCar(AbstractCar):
     IMG = RED_CAR
