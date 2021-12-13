@@ -3,15 +3,15 @@ import time
 import math
 from utils import scale_image, blit_rotate_center
 
-TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.5)
+TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.6)
 GRASS = scale_image(pygame.image.load("imgs/grass.jpg"), 2.5)
 
-TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.5)
+TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.6)
 TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER)
 FINISH = pygame.image.load("imgs/finish.png")
 
-RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.55)
-FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.55)
+RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.33)
+FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -23,7 +23,7 @@ class AbstractCar:
     IMG = RED_CAR
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
-        self.max_vel = max_vel
+        self.max_vel = 1.5
         self.vel = 0
         self.rotation_vel = rotation_vel
         self.angle = 270
@@ -59,13 +59,18 @@ class AbstractCar:
         car_mask = pygame.mask.from_surface(self.img)
         offset = (int(self.x - x), int(self.y - y))
         poi = mask.overlap(car_mask, offset)
+        return poi
         
 class PlayerCar(AbstractCar):
     IMG = RED_CAR
-    START_POS = (180, 610)
+    START_POS = (200, 610)
     
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
+        self.move()
+    
+    def bounce(self):
+        self.vel = -self.vel
         self.move()
 
 
@@ -112,5 +117,8 @@ while run:
             break
      
     move_player(player_car)
+    
+    if player_car.collide(TRACK_BORDER_MASK) != None:
+        player_car.bounce()
 
 pygame.quit()
