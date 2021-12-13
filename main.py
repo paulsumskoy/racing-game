@@ -22,12 +22,12 @@ class AbstractCar:
     IMG = RED_CAR
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
-        self.max_vel = max_vel
+        self.max_vel = 1
         self.vel = 0
         self.rotation_vel = rotation_vel
         self.angle = 90
         self.x, self.y = self.START_POS
-        self.acceleration = 0.1
+        self.acceleration = 0.01
         
     def rotate(self, left=False, right=False):
         if left:
