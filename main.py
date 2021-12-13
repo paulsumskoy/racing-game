@@ -56,7 +56,7 @@ class AbstractCar:
         
 class PlayerCar(AbstractCar):
     IMG = RED_CAR
-    START_POS = (180, 200)
+    START_POS = (180, 610)
     
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
