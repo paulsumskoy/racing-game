@@ -22,7 +22,7 @@ class AbstractCar:
     IMG = RED_CAR
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
-        self.max_vel = 1
+        self.max_vel = 1.5
         self.vel = 0
         self.rotation_vel = rotation_vel
         self.angle = 90
@@ -58,8 +58,8 @@ class PlayerCar(AbstractCar):
     IMG = RED_CAR
     START_POS = (180, 200)
     
-    def reduce_speed(self):
-        self.vel = max(self.vel - self.acceleration / 2, 0)
+    def reduce_speed(self, slowdown):
+        self.vel = max(self.vel - self.acceleration / slowdown, 0)
         self.move()
 
 
@@ -84,9 +84,10 @@ def move_player(player_car):
     if keys[pygame.K_s]:
         moved = True
         player_car.move_backward()
-
+    if keys[pygame.K_SPACE]:
+        player_car.reduce_speed(4)
     if not moved:
-        player_car.reduce_speed()
+        player_car.reduce_speed(2)
     
 
 run = True
