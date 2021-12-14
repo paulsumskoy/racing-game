@@ -8,8 +8,10 @@ GRASS = scale_image(pygame.image.load("imgs/grass.jpg"), 2.5)
 
 TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.6)
 TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER)
+
 FINISH = scale_image(pygame.image.load("imgs/finish.png"), 0.13)
 FINISH_POSITION = (848, 450)
+FINISH_MASK = pygame.mask.from_surface(FINISH)
 
 RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
@@ -61,10 +63,15 @@ class AbstractCar:
         offset = (int(self.x - x), int(self.y - y))
         poi = mask.overlap(car_mask, offset)
         return poi
+
+    def reset(self):
+        self.x, self.y = self.START_POS
+        self.angle = 0
+        self.vel = 0
         
 class PlayerCar(AbstractCar):
     IMG = RED_CAR
-    START_POS = (875, 490)
+    START_POS = (875, 445)
     
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
@@ -104,8 +111,8 @@ def move_player(player_car):
 
 run = True
 clock = pygame.time.Clock()
-images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION)]
-player_car = PlayerCar(4, 4)
+images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (TRACK_BORDER, (0, 0))]
+player_car = PlayerCar(8, 8)
 
 while run: 
     clock.tick(FPS)
@@ -121,5 +128,13 @@ while run:
     
     if player_car.collide(TRACK_BORDER_MASK) != None:
         player_car.bounce()
-
+        
+    finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
+    if finish_poi_collide != None:
+        if finish_poi_collide[1] == 24:
+            player_car.bounce()
+        else:
+            player_car.reset()
+            print("finish")
+        
 pygame.quit()
