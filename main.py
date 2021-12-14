@@ -3,10 +3,10 @@ import time
 import math
 from utils import scale_image, blit_rotate_center
 
-TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.6)
+TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.5)
 GRASS = scale_image(pygame.image.load("imgs/grass.jpg"), 2.5)
 
-TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.6)
+TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.5)
 TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER)
 
 FINISH = scale_image(pygame.image.load("imgs/finish.png"), 0.13)
