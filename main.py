@@ -21,6 +21,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Racing Game!")
 
 FPS = 60
+PATH= (858, 412), (771, 376), (590, 378), (506, 335), (427, 243), (177, 199), (98, 239), (82, 287), (95, 337), (132, 371), (189, 381), (270, 380), (356, 382), (423, 437), (475, 486), (550, 571), (545, 633), (490, 655), (403, 634), (259, 641), (210, 611), (179, 555), (141, 529), (90, 547), (80, 585), (84, 622), (134, 731), (199, 761), (628, 759), (677, 693), (712, 631), (757, 606), (811, 597), (855, 568), (876, 521), (878, 491), (411, 758)
 
 class AbstractCar:
     IMG = RED_CAR
@@ -131,7 +132,7 @@ run = True
 clock = pygame.time.Clock()
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (GRASS_BORDER, (0, 0))]
 player_car = PlayerCar(8, 8)
-computer_car = ComputerCar(4, 4)
+computer_car = ComputerCar(4, 4, PATH)
 
 while run: 
     clock.tick(FPS)
@@ -158,4 +159,5 @@ while run:
             player_car.reset()
             print("finish")
         
+print(computer_car.path)
 pygame.quit()
