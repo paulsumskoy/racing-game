@@ -6,8 +6,8 @@ from utils import scale_image, blit_rotate_center
 TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.6)
 GRASS = scale_image(pygame.image.load("imgs/grass.jpg"), 2.5)
 
-TRACK_BORDER = scale_image(pygame.image.load("imgs/border.png"), 0.6)
-TRACK_BORDER_MASK = pygame.mask.from_surface(TRACK_BORDER)
+GRASS_BORDER = scale_image(pygame.image.load("imgs/grass_border.png"), 0.6)
+GRASS_BORDER_MASK = pygame.mask.from_surface(GRASS_BORDER)
 
 FINISH = scale_image(pygame.image.load("imgs/finish.png"), 0.13)
 FINISH_POSITION = (848, 450)
@@ -31,7 +31,7 @@ class AbstractCar:
         self.rotation_vel = rotation_vel
         self.angle = 0
         self.x, self.y = self.START_POS
-        self.acceleration = 0.01
+        self.acceleration = 0.02
         
     def rotate(self, left=False, right=False):
         if left:
@@ -129,7 +129,7 @@ def move_player(player_car):
 
 run = True
 clock = pygame.time.Clock()
-images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (TRACK_BORDER, (0, 0))]
+images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (GRASS_BORDER, (0, 0))]
 player_car = PlayerCar(8, 8)
 computer_car = ComputerCar(4, 4)
 
@@ -145,8 +145,10 @@ while run:
      
     move_player(player_car)
     
-    if player_car.collide(TRACK_BORDER_MASK) != None:
-        player_car.bounce()
+    if player_car.collide(GRASS_BORDER_MASK) != None:
+        player_car.max_vel = 0.75
+    else:
+        player_car.max_vel = 1.5
         
     finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
     if finish_poi_collide != None:
