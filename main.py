@@ -22,6 +22,36 @@ pygame.display.set_caption("Racing Game!")
 
 FPS = 60
 PATH= (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
+
+class GameInfo:
+    LAPS = 10
+    
+    def __init__(self, lap=1):
+        self.lap = lap
+        self.started = False
+        self.lap_start_time = 0
+        
+    def next_lap(self):
+        self.lap += 1
+        self.started = False
+        
+    def reset(self):
+        self.level = 1
+        self.started = False
+        self.level_start_time = 0
+    
+    def game_finished(self):
+        return self.lap > self.LAPS
+    
+    def start_lap(self):
+        self.started = True
+        self.level_start_time = time.time()
+        
+    def get_lap_time(self):
+        if not self.started:
+            return 0
+        return self.lap_start_time - time.time()
+        
 class AbstractCar:
     IMG = BLUE_CAR
     def __init__(self, max_vel, rotation_vel):
@@ -76,6 +106,7 @@ class PlayerCar(AbstractCar):
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
         self.move()
+        print(self.vel)
     
     def bounce(self):
         self.vel = -self.vel
