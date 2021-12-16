@@ -13,7 +13,7 @@ FINISH = scale_image(pygame.image.load("imgs/finish.png"), 0.13)
 FINISH_POSITION = (848, 450)
 FINISH_MASK = pygame.mask.from_surface(FINISH)
 
-RED_CAR = scale_image(pygame.image.load("imgs/red-car.png"), 0.33)
+BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
@@ -24,7 +24,7 @@ FPS = 60
 PATH= (858, 412), (771, 376), (590, 378), (506, 335), (427, 243), (177, 199), (98, 239), (82, 287), (95, 337), (132, 371), (189, 381), (270, 380), (356, 382), (423, 437), (475, 486), (550, 571), (545, 633), (490, 655), (403, 634), (259, 641), (210, 611), (179, 555), (141, 529), (90, 547), (80, 585), (84, 622), (134, 731), (199, 761), (628, 759), (677, 693), (712, 631), (757, 606), (811, 597), (855, 568), (876, 521), (878, 491), (411, 758)
 
 class AbstractCar:
-    IMG = RED_CAR
+    IMG = BLUE_CAR
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
         self.max_vel = 1.5
@@ -71,7 +71,7 @@ class AbstractCar:
         self.vel = 0
         
 class PlayerCar(AbstractCar):
-    IMG = RED_CAR
+    IMG = BLUE_CAR
     START_POS = (860, 445)
     
     def reduce_speed(self, slowdown):
