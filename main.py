@@ -1,3 +1,4 @@
+from typing_extensions import Self
 import pygame
 import time
 import math
@@ -120,7 +121,13 @@ class ComputerCar(AbstractCar):
         if difference_in_angle > 0:
             self.angle -= min(self.rotation_vel, abs(difference_in_angle))
         else:
-            self.angle += min(self.rotation_vel, abs(difference_in_angle))   
+            self.angle += min(self.rotation_vel, abs(difference_in_angle))  
+        
+    def update_path_point():
+        target = self.path[self.current_point]
+        rect = pygame.Rect(self.x, self.y, self.img_get_width(), self.img.get_height())
+        if rect.collidepoint(*target):
+            self.current_point += 1
         
     def move(self):
         if self.current_point >= len(self.path):
@@ -179,6 +186,7 @@ while run:
             #computer_car.path.append(pos)
      
     move_player(player_car)
+    computer_car.move()
     
     if player_car.collide(GRASS_BORDER_MASK) != None:
         player_car.max_vel = 0.75
