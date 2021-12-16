@@ -109,8 +109,11 @@ class PlayerCar(AbstractCar):
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
         self.move()
-        #print(self.vel)
-    
+    def increase_speed(self):
+        self.max_vel = 2.5
+        print(self.vel)
+    def return_max_speed(self):
+        self.max_vel = 1.5
     def bounce(self):
         self.vel = -self.vel
         self.move()
@@ -180,19 +183,20 @@ def draw(win, images, player_car, computer_car):
 def move_player(player_car):
     keys = pygame.key.get_pressed()
     moved = False
-
     if keys[pygame.K_a]:
         player_car.rotate(left=True)
     if keys[pygame.K_d]:
         player_car.rotate(right=True)
     if keys[pygame.K_w]:
         moved = True
+        if keys[pygame.K_SPACE]:
+          player_car.increase_speed()
+        else:
+          player_car.return_max_speed()
         player_car.move_forward()
     if keys[pygame.K_s]:
         moved = True
         player_car.move_backward()
-    if keys[pygame.K_SPACE]:
-        player_car.reduce_speed(4)
     if not moved:
         player_car.reduce_speed(2)
         
