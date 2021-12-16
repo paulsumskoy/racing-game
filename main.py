@@ -21,8 +21,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Racing Game!")
 
 FPS = 60
-PATH= (858, 412), (771, 376), (590, 378), (506, 335), (427, 243), (177, 199), (98, 239), (82, 287), (95, 337), (132, 371), (189, 381), (270, 380), (356, 382), (423, 437), (475, 486), (550, 571), (545, 633), (490, 655), (403, 634), (259, 641), (210, 611), (179, 555), (141, 529), (90, 547), (80, 585), (84, 622), (134, 731), (199, 761), (628, 759), (677, 693), (712, 631), (757, 606), (811, 597), (855, 568), (876, 521), (878, 491), (411, 758)
-
+PATH= (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
 class AbstractCar:
     IMG = BLUE_CAR
     def __init__(self, max_vel, rotation_vel):
@@ -199,9 +198,9 @@ while run:
             run = False
             break
         
-        #if event.type == pygame.MOUSEBUTTONDOWN:
-            #pos = pygame.mouse.get_pos()
-            #computer_car.path.append(pos)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            computer_car.path.append(pos)
      
     move_player(player_car)
     computer_car.move()
