@@ -1,4 +1,3 @@
-from typing_extensions import Self
 import pygame
 import time
 import math
@@ -99,9 +98,9 @@ class ComputerCar(AbstractCar):
             
     def draw(self, win):
         super().draw(win)
-        self.draw_points(win)
+        #self.draw_points(win)
         
-    def calculate_agle(self):
+    def calculate_angle(self):
         target_x, target_y = self.path[self.current_point]
         x_diff = target_x - self.x
         y_diff = target_y - self.y
@@ -123,9 +122,9 @@ class ComputerCar(AbstractCar):
         else:
             self.angle += min(self.rotation_vel, abs(difference_in_angle))  
         
-    def update_path_point():
+    def update_path_point(self):
         target = self.path[self.current_point]
-        rect = pygame.Rect(self.x, self.y, self.img_get_width(), self.img.get_height())
+        rect = pygame.Rect(self.x, self.y, self.img.get_width(), self.img.get_height())
         if rect.collidepoint(*target):
             self.current_point += 1
         
@@ -192,13 +191,19 @@ while run:
         player_car.max_vel = 0.75
     else:
         player_car.max_vel = 1.5
+    
+    computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION) 
+    if computer_finish_poi_collide != None:
+        player_car.reset()
+        computer_car.reset()
         
-    finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
-    if finish_poi_collide != None:
-        if finish_poi_collide[1] == 24:
+    player_finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
+    if player_finish_poi_collide != None:
+        if player_finish_poi_collide[1] == 24:
             player_car.bounce()
         else:
             player_car.reset()
+            computer_car.reset()
             print("finish")
         
 print(computer_car.path)
