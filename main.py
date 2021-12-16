@@ -27,7 +27,7 @@ class AbstractCar:
     IMG = BLUE_CAR
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
-        self.max_vel = 1.5
+        self.max_vel = max_vel
         self.vel = 0
         self.rotation_vel = rotation_vel
         self.angle = 0
@@ -187,7 +187,7 @@ run = True
 clock = pygame.time.Clock()
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (GRASS_BORDER, (0, 0))]
 player_car = PlayerCar(8, 8)
-computer_car = ComputerCar(4, 4, PATH)
+computer_car = ComputerCar(2, 2, PATH)
 
 while run: 
     clock.tick(FPS)
