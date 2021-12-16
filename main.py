@@ -186,7 +186,7 @@ run = True
 clock = pygame.time.Clock()
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (GRASS_BORDER, (0, 0))]
 player_car = PlayerCar(8, 8)
-computer_car = ComputerCar(2, 2, PATH)
+computer_car = ComputerCar(1.4, 1.4, PATH)
 
 while run: 
     clock.tick(FPS)
