@@ -109,7 +109,7 @@ class PlayerCar(AbstractCar):
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
         self.move()
-        print(self.vel)
+        #print(self.vel)
     
     def bounce(self):
         self.vel = -self.vel
