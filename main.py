@@ -1,7 +1,8 @@
 import pygame
 import time
 import math
-from utils import scale_image, blit_rotate_center
+from utils import scale_image, blit_rotate_center, blit_text_center
+pygame.font.init()
 
 TRACK = scale_image(pygame.image.load("imgs/track.png"), 0.6)
 GRASS = scale_image(pygame.image.load("imgs/grass.jpg"), 2.5)
@@ -20,6 +21,8 @@ WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Racing Game!")
 
+MAIN_FONT = pygame.font.SysFont("comicsans", 44)
+
 FPS = 60
 PATH= (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
 
@@ -36,16 +39,16 @@ class GameInfo:
         self.started = False
         
     def reset(self):
-        self.level = 1
+        self.lap = 1
         self.started = False
-        self.level_start_time = 0
+        self.lap_start_time = 0
     
     def game_finished(self):
         return self.lap > self.LAPS
     
     def start_lap(self):
         self.started = True
-        self.level_start_time = time.time()
+        self.lap_start_time = time.time()
         
     def get_lap_time(self):
         if not self.started:
@@ -218,12 +221,24 @@ clock = pygame.time.Clock()
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (GRASS_BORDER, (0, 0))]
 player_car = PlayerCar(8, 8)
 computer_car = ComputerCar(1.4, 1.4, PATH)
+game_info = GameInfo()
 
 while run: 
     clock.tick(FPS)
     
     draw(WIN, images, player_car, computer_car)
     
+    while not game_info.started:
+        blit_text_center(WIN, MAIN_FONT, f"Press any key to start race {game_info.lap}!")
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                break
+            
+            if event.type == pygame.KEYDOWN:
+                game_info.start_lap()
+            
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
