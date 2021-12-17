@@ -30,7 +30,7 @@ PATH = (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (
 
 
 class GameInfo:
-    LAPS = 10
+    LAPS = 3
 
     def __init__(self, lap=1):
         self.lap = lap
@@ -185,7 +185,11 @@ class ComputerCar(AbstractCar):
         self.calculate_angle()
         self.update_path_point()
         super().move()
-
+        
+    def next_lap(self, lap):
+        self.reset()
+        self.vel = self.max_vel + (lap - 1) * 0.02
+        self.current_point = 0
 
 def draw(win, images, player_car, computer_car, game_info):
     for img, pos in images:
@@ -232,9 +236,13 @@ def move_player(player_car):
         player_car.reduce_speed(2)
 
 
-def handle_collision(player_car, computer_car):
+def handle_collision(player_car, computer_car, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
     if computer_finish_poi_collide != None:
+        blit_text_center(WIN, MAIN_FONT, "GOVNO!")
+        pygame.display.update()
+        pygame.time.wait(10000)
+        game_info.reset()
         player_car.reset()
         computer_car.reset()
 
@@ -243,9 +251,10 @@ def handle_collision(player_car, computer_car):
         if player_finish_poi_collide[1] == 24:
             player_car.bounce()
         else:
+            game_info.next_lap()
             player_car.reset()
-            computer_car.reset()
-            print("finish")
+            computer_car.next_lap(game_info.lap)
+            #print("finish")
 
 
 run = True
@@ -283,7 +292,14 @@ while run:
     move_player(player_car)
     computer_car.move()
 
-    handle_collision(player_car, computer_car)
-
+    handle_collision(player_car, computer_car, game_info)
+    
+    if game_info.game_finished():        
+        blit_text_center(WIN, MAIN_FONT, "WIN!")
+        pygame.time.wait(10000)
+        game_info.reset()
+        player_car.reset()
+        computer_car.reset()
+        
 #print(computer_car.path)
 pygame.quit()
