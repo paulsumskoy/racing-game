@@ -118,11 +118,15 @@ class PlayerCar(AbstractCar):
 
     def increase_speed(self):
         self.max_vel = 2.5
-        #print(self.vel)
+        if self.collide(GRASS_BORDER_MASK) != None:
+          self.max_vel = 1
 
     def return_max_speed(self):
         self.max_vel = 1.5
-
+        if self.collide(GRASS_BORDER_MASK) != None:
+          self.max_vel = 0.75
+        else:
+          self.max_vel = 1.5
     def bounce(self):
         self.vel = -self.vel
         self.move()
@@ -224,11 +228,6 @@ def move_player(player_car):
 
 
 def handle_collision(player_car, computer_car):
-    if player_car.collide(GRASS_BORDER_MASK) != None:
-        player_car.max_vel = 0.75
-    else:
-        player_car.max_vel = 1.5
-
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
     if computer_finish_poi_collide != None:
         player_car.reset()
