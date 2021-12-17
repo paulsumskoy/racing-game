@@ -183,11 +183,11 @@ class ComputerCar(AbstractCar):
         super().move()
 
 
-def draw(win, images, player_car, computer_car):
+def draw(win, images, player_car, computer_car, game_info):
     for img, pos in images:
         win.blit(img, pos)
         
-    lap_text = MAIN_FONT.render(f"Lap {game.info_lap}", 1, (255, 255, 255))
+    lap_text = MAIN_FONT.render(f"Lap {game_info.lap}", 1, (255, 255, 255))
     win.blit(lap_text, (10, HEIGHT - lap_text.get_height() - 70))
 
     time_text = MAIN_FONT.render(f"Time: {game_info.get_lap_time()}s", 1, (255, 255, 255))
