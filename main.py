@@ -56,7 +56,7 @@ class GameInfo:
     def get_lap_time(self):
         if not self.started:
             return 0
-        return self.lap_start_time - time.time()
+        return round(time.time() - self.lap_start_time)
 
 
 class AbstractCar:
