@@ -60,8 +60,6 @@ class GameInfo:
 
 
 class AbstractCar:
-    IMG = BLUE_CAR
-
     def __init__(self, max_vel, rotation_vel):
         self.img = self.IMG
         self.max_vel = max_vel
@@ -239,9 +237,9 @@ def move_player(player_car):
 def handle_collision(player_car, computer_car, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
     if computer_finish_poi_collide != None:
-        blit_text_center(WIN, MAIN_FONT, "GOVNO!")
+        blit_text_center(WIN, MAIN_FONT, "You lose!")
         pygame.display.update()
-        pygame.time.wait(10000)
+        pygame.time.wait(5000)
         game_info.reset()
         player_car.reset()
         computer_car.reset()
@@ -296,7 +294,7 @@ while run:
     
     if game_info.game_finished():        
         blit_text_center(WIN, MAIN_FONT, "WIN!")
-        pygame.time.wait(10000)
+        pygame.time.wait(5000)
         game_info.reset()
         player_car.reset()
         computer_car.reset()
