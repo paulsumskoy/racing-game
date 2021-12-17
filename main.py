@@ -220,6 +220,11 @@ def move_player(player_car):
         else:
             player_car.return_max_speed()
         player_car.move_forward()
+    else:
+        if player_car.collide(GRASS_BORDER_MASK) != None:
+          player_car.max_vel = 0.75
+        else:
+          player_car.max_vel = 1.5
     if keys[pygame.K_s]:
         moved = True
         player_car.move_backward()
