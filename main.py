@@ -186,6 +186,16 @@ class ComputerCar(AbstractCar):
 def draw(win, images, player_car, computer_car):
     for img, pos in images:
         win.blit(img, pos)
+        
+    lap_text = MAIN_FONT.render(f"Lap {game.info_lap}", 1, (255, 255, 255))
+    win.blit(lap_text, (10, HEIGHT - lap_text.get_height() - 70))
+
+    time_text = MAIN_FONT.render(f"Time: {game_info.get_lap_time()}s", 1, (255, 255, 255))
+    win.blit(time_text, (10, HEIGHT - time_text.get_height() - 40))
+
+    vel_text = MAIN_FONT.render(f"Vel: {player_car.vel}px/s", 1, (255, 255, 255))
+    win.blit(vel_text, (10, HEIGHT - vel_text.get_height() - 10))
+
 
     player_car.draw(win)
     computer_car.draw(win)
@@ -244,7 +254,7 @@ game_info = GameInfo()
 while run:
     clock.tick(FPS)
 
-    draw(WIN, images, player_car, computer_car)
+    draw(WIN, images, player_car, computer_car, game_info)
 
     while not game_info.started:
         blit_text_center(WIN, MAIN_FONT, f"Press any key to start race {game_info.lap}!")
