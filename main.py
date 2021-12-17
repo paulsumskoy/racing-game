@@ -192,13 +192,13 @@ def draw(win, images, player_car, computer_car, game_info):
         win.blit(img, pos)
         
     lap_text = MAIN_FONT.render(f"Lap {game_info.lap}", 1, (255, 255, 255))
-    win.blit(lap_text, (10, HEIGHT - lap_text.get_height() - 70))
+    win.blit(lap_text, (10, HEIGHT - lap_text.get_height() - 80))
 
     time_text = MAIN_FONT.render(f"Time: {game_info.get_lap_time()}s", 1, (255, 255, 255))
     win.blit(time_text, (10, HEIGHT - time_text.get_height() - 40))
 
     vel_text = MAIN_FONT.render(f"Vel: {round(player_car.vel, 1)}px/s", 1, (255, 255, 255))
-    win.blit(vel_text, (10, HEIGHT - vel_text.get_height() - 10))
+    win.blit(vel_text, (10, HEIGHT - vel_text.get_height() - 0))
 
 
     player_car.draw(win)
@@ -271,9 +271,9 @@ while run:
             run = False
             break
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            computer_car.path.append(pos)
+        #if event.type == pygame.MOUSEBUTTONDOWN:
+            #pos = pygame.mouse.get_pos()
+            #computer_car.path.append(pos)
 
     move_player(player_car)
     computer_car.move()
