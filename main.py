@@ -17,6 +17,7 @@ FINISH_MASK = pygame.mask.from_surface(FINISH)
 
 BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
+POLICE_CAR = scale_image(pygame.image.load("imgs/police.png"), 0.18)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -189,7 +190,11 @@ class ComputerCar(AbstractCar):
         self.vel = self.max_vel + (lap - 1) * 0.02
         self.current_point = 0
 
-def draw(win, images, player_car, computer_car, game_info):
+class PoliceCar(AbstractCar):
+    IMG = POLICE_CAR
+    START_POS = (350, 120)
+
+def draw(win, images, player_car, computer_car, police_car, game_info):
     for img, pos in images:
         win.blit(img, pos)
         
@@ -205,6 +210,7 @@ def draw(win, images, player_car, computer_car, game_info):
 
     player_car.draw(win)
     computer_car.draw(win)
+    police_car.draw(win)
     pygame.display.update()
 
 
@@ -260,12 +266,13 @@ clock = pygame.time.Clock()
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (GRASS_BORDER, (0, 0))]
 player_car = PlayerCar(8, 8)
 computer_car = ComputerCar(1.4, 1.4, PATH)
+police_car = PoliceCar(1.5, 1.5)
 game_info = GameInfo()
 
 while run:
     clock.tick(FPS)
 
-    draw(WIN, images, player_car, computer_car, game_info)
+    draw(WIN, images, player_car, computer_car, police_car, game_info)
 
     while not game_info.started:
         blit_text_center(WIN, MAIN_FONT, f"Press any key to start race {game_info.lap}!")
