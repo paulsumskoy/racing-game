@@ -118,7 +118,7 @@ class PlayerCar(AbstractCar):
 
     def increase_speed(self):
         self.max_vel = 2.5
-        print(self.vel)
+        #print(self.vel)
 
     def return_max_speed(self):
         self.max_vel = 1.5
@@ -281,5 +281,5 @@ while run:
 
     handle_collision(player_car, computer_car)
 
-print(computer_car.path)
+#print(computer_car.path)
 pygame.quit()
