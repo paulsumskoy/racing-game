@@ -35,6 +35,7 @@ PATH_COIN = ((416, 223), (187, 379), (534, 554), (174, 530), (715, 619))
 
 BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
+POLICE_CAR = scale_image(pygame.image.load("imgs/police.png"), 0.18)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -222,7 +223,11 @@ class Coins:
 
 
 
-def draw(win, images, player_car, computer_car, game_info):
+class PoliceCar(AbstractCar):
+    IMG = POLICE_CAR
+    START_POS = (350, 120)
+
+def draw(win, images, player_car, computer_car, police_car, game_info):
     for img, pos in images:
         win.blit(img, pos)
         
@@ -238,6 +243,7 @@ def draw(win, images, player_car, computer_car, game_info):
 
     player_car.draw(win)
     computer_car.draw(win)
+    police_car.draw(win)
     pygame.display.update()
 
 
@@ -318,6 +324,7 @@ images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION),(COIN1, PA
 # (COIN3, COIN3_POSITION),(COIN4, COIN4_POSITION),(COIN5, COIN5_POSITION)
 player_car = PlayerCar(8, 8)
 computer_car = ComputerCar(1.4, 1.4, PATH)
+police_car = PoliceCar(1.5, 1.5)
 game_info = GameInfo()
 
 # (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
@@ -329,7 +336,7 @@ coin1 = Coins(416, 223);
 while run:
     clock.tick(FPS)
 
-    draw(WIN, images, player_car, computer_car, game_info)
+    draw(WIN, images, player_car, computer_car, police_car, game_info)
 
     while not game_info.started:
         blit_text_center(WIN, MAIN_FONT, f"Press any key to start race {game_info.lap}!")
@@ -361,6 +368,7 @@ while run:
     if game_info.game_finished():        
         blit_text_center(WIN, MAIN_FONT, "WIN!")
         pygame.time.wait(5000)
+        pygame.display.update()
         game_info.reset()
         player_car.reset()
         computer_car.reset()
