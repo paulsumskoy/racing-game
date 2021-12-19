@@ -48,10 +48,10 @@ MAIN_FONT = pygame.font.SysFont("comicsans", 44)
 FPS = 60
 PATH = (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
     120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
-PATH1 = (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
-    120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
-PATH2 = [(599, 397), (461, 254), (181, 205), (256, 381), (355, 369), (546, 596), (355, 627), (233, 635), (157, 526), (127, 711), (358, 760), (684, 699), (740, 
-600)]
+PATH1 = (765, 370), (581, 371), (411, 234), (154, 214), (182, 399), (329, 363), (523, 528), (457, 639), (219, 624), (
+    135, 517), (144, 749), (648, 748), (752, 589), (890, 527), (891, 483)
+PATH2 = (599, 397), (461, 254), (181, 205), (256, 381), (355, 369), (546, 596), (355, 627), (233, 635), (157, 526), (127, 711), (358, 760), (684, 699), (740, 
+600)
 PATH3 = (0, 0), (100, 100)
 
 
@@ -136,7 +136,8 @@ class AbstractCar:
 
 class PlayerCar(AbstractCar):
     IMG = BLUE_CAR
-    #START_POS = (860, 445)
+
+    # START_POS = (860, 445)
 
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
@@ -161,7 +162,8 @@ class PlayerCar(AbstractCar):
 
 class ComputerCar(AbstractCar):
     IMG = FREE_CAR
-    #START_POS = (880, 445)
+
+    # START_POS = (880, 445)
 
     def __init__(self, max_vel, rotation_vel, spawn_position, path=[]):
         super().__init__(max_vel, rotation_vel, spawn_position)
@@ -231,11 +233,13 @@ class Coins:
 
 class PoliceCar(AbstractCar):
     IMG = POLICE_CAR
-    #START_POS = (350, 120)
+    # START_POS = (350, 120)
+
 
 class Pedestrians(AbstractCar):
     IMG = PEDESTRIANS
-    #START_POS = (150, 200)
+
+    # START_POS = (150, 200)
 
     def __init__(self, max_vel, rotation_vel, spawn_position, path=[]):
         super().__init__(max_vel, rotation_vel, spawn_position)
@@ -249,7 +253,7 @@ class Pedestrians(AbstractCar):
 
     def draw(self, win):
         super().draw(win)
-        #self.draw_points(win)
+        # self.draw_points(win)
 
     def calculate_angle(self):
         target_x, target_y = self.path[self.current_point]
@@ -291,6 +295,7 @@ class Pedestrians(AbstractCar):
         self.reset()
         self.vel = self.max_vel + (lap - 1) * 0.02
         self.current_point = 0
+
 
 def draw(win, images, player_car, computer_car, computer_car1, computer_car2, police_car, pipidastr, game_info):
     for img, pos in images:
@@ -389,8 +394,8 @@ def handle_collision(player_car, computer_car, computer_car1, computer_car2, pip
                 coin5.passed = False
             else:
                 print('You cannot finish a lap without passing all coins')
-                    
-            #print("finish")
+
+            # print("finish")
 
 
 run = True
@@ -437,8 +442,8 @@ while run:
             break
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-          pos = pygame.mouse.get_pos()
-          computer_car.path.append(pos)
+            pos = pygame.mouse.get_pos()
+            computer_car.path.append(pos)
 
     move_player(player_car)
     computer_car.move()
