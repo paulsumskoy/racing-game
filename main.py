@@ -280,18 +280,28 @@ def coin_collision(player_car):
     player_coin5_collide = player_car.collide(COIN1_MASK, *PATH_COIN[4])
     if player_coin1_collide != None:
         coin1.passed = True
+        print(coin1.passed)
+        print('1-ok')
         # монетка пропадает
     if player_coin2_collide != None:
-        COIN2.passed = True
+        coin2.passed = True
+        print(coin2.passed)
+        print('2-ok')
         # монетка пропадает
     if player_coin3_collide != None:
-        COIN3.passed = True
+        coin3.passed = True
+        print(coin3.passed)
+        print('3-ok')
         # монетка пропадает
     if player_coin4_collide != None:
-        COIN4.passed = True
+        coin4.passed = True
+        print(coin4.passed)
+        print('4-ok')
         # монетка пропадает
     if player_coin5_collide != None:
-        COIN5.passed = True
+        coin5.passed = True
+        print(coin5.passed)
+        print('5-ok')
         # монетка пропадает
 
 
@@ -320,7 +330,7 @@ def handle_collision(player_car, computer_car, game_info):
 
 run = True
 clock = pygame.time.Clock()
-images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION),(COIN1, PATH_COIN[0]), (GRASS_BORDER, (0, 0)), ]
+images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION),(COIN1, PATH_COIN[0]), (COIN1, PATH_COIN[1]), (COIN1, PATH_COIN[2]), (COIN1, PATH_COIN[3]), (COIN1, PATH_COIN[4]), (GRASS_BORDER, (0, 0)), ]
 # (COIN3, COIN3_POSITION),(COIN4, COIN4_POSITION),(COIN5, COIN5_POSITION)
 player_car = PlayerCar(8, 8)
 computer_car = ComputerCar(1.4, 1.4, PATH)
@@ -330,8 +340,11 @@ game_info = GameInfo()
 # (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
 #     120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
 
-coin1 = Coins(416, 223);
-
+coin1 = Coins(416, 223)
+coin2 = Coins(187, 379)
+coin3 = Coins(534, 554)
+coin4 = Coins(174, 530)
+coin5 = Coins(715, 619)
 
 while run:
     clock.tick(FPS)
