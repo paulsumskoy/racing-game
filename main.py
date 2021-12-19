@@ -1,6 +1,7 @@
 import pygame
 import time
 import math
+import collections
 from utils import scale_image, blit_rotate_center, blit_text_center
 
 pygame.font.init()
@@ -272,7 +273,10 @@ def move_player(player_car):
     if not moved:
         player_car.reduce_speed(2)
 
+
+
 def coin_collision(player_car):
+    count = 0
     player_coin1_collide = player_car.collide(COIN1_MASK, *PATH_COIN[0])
     player_coin2_collide = player_car.collide(COIN1_MASK, *PATH_COIN[1])
     player_coin3_collide = player_car.collide(COIN1_MASK, *PATH_COIN[2])
@@ -322,9 +326,13 @@ def handle_collision(player_car, computer_car, game_info):
         if player_finish_poi_collide[1] == 24:
             player_car.bounce()
         else:
-            game_info.next_lap()
-            player_car.reset()
-            computer_car.next_lap(game_info.lap)
+            if coin1.passed and coin2.passed and coin3.passed and coin3.passed and coin4.passed and coin5.passed == True:
+                game_info.next_lap()
+                player_car.reset()
+                computer_car.next_lap(game_info.lap)
+            else:
+                print('You cannot finish a lap without passing all coins')
+                    
             #print("finish")
 
 
