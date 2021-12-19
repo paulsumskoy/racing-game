@@ -136,7 +136,8 @@ class AbstractCar:
 
 class PlayerCar(AbstractCar):
     IMG = BLUE_CAR
-    #START_POS = (860, 445)
+
+    # START_POS = (860, 445)
 
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
@@ -161,7 +162,8 @@ class PlayerCar(AbstractCar):
 
 class ComputerCar(AbstractCar):
     IMG = FREE_CAR
-    #START_POS = (880, 445)
+
+    # START_POS = (880, 445)
 
     def __init__(self, max_vel, rotation_vel, spawn_position, path=[]):
         super().__init__(max_vel, rotation_vel, spawn_position)
@@ -175,7 +177,7 @@ class ComputerCar(AbstractCar):
 
     def draw(self, win):
         super().draw(win)
-        self.draw_points(win)
+        # self.draw_points(win)
 
     def calculate_angle(self):
         target_x, target_y = self.path[self.current_point]
@@ -231,11 +233,13 @@ class Coins:
 
 class PoliceCar(AbstractCar):
     IMG = POLICE_CAR
-    #START_POS = (350, 120)
+    # START_POS = (350, 120)
+
 
 class Pedestrians(AbstractCar):
     IMG = PEDESTRIANS
-    #START_POS = (150, 200)
+
+    # START_POS = (150, 200)
 
     def __init__(self, max_vel, rotation_vel, spawn_position, path=[]):
         super().__init__(max_vel, rotation_vel, spawn_position)
@@ -249,7 +253,7 @@ class Pedestrians(AbstractCar):
 
     def draw(self, win):
         super().draw(win)
-        #self.draw_points(win)
+        # self.draw_points(win)
 
     def calculate_angle(self):
         target_x, target_y = self.path[self.current_point]
@@ -291,6 +295,7 @@ class Pedestrians(AbstractCar):
         self.reset()
         self.vel = self.max_vel + (lap - 1) * 0.02
         self.current_point = 0
+
 
 def draw(win, images, player_car, computer_car, computer_car1, computer_car2, police_car, pipidastr, game_info):
     for img, pos in images:
@@ -389,8 +394,8 @@ def handle_collision(player_car, computer_car, computer_car1, computer_car2, pip
                 coin5.passed = False
             else:
                 print('You cannot finish a lap without passing all coins')
-                    
-            #print("finish")
+
+            # print("finish")
 
 
 run = True
@@ -437,8 +442,8 @@ while run:
             break
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-          pos = pygame.mouse.get_pos()
-          computer_car.path.append(pos)
+            pos = pygame.mouse.get_pos()
+            computer_car.path.append(pos)
 
     move_player(player_car)
     computer_car.move()
