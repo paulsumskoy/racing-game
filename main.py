@@ -1,3 +1,4 @@
+import random
 import pygame
 import time
 import math
@@ -350,6 +351,7 @@ def coin_collision(player_car):
     player_coin3_collide = player_car.collide(COIN1_MASK, *PATH_COIN[2])
     player_coin4_collide = player_car.collide(COIN1_MASK, *PATH_COIN[3])
     player_coin5_collide = player_car.collide(COIN1_MASK, *PATH_COIN[4])
+
     if player_coin1_collide is not None:
         coin1.passed = True
     if player_coin2_collide is not None:
@@ -364,16 +366,39 @@ def coin_collision(player_car):
 
 def handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
+    computer_finish_poi_collide1 = computer_car1.collide(FINISH_MASK, *FINISH_POSITION)
+    computer_finish_poi_collide2 = computer_car2.collide(FINISH_MASK, *FINISH_POSITION)
+
     if computer_finish_poi_collide is not None:
         blit_text_center(WIN, MAIN_FONT, "You lose!")
         pygame.display.update()
         pygame.time.wait(5000)
-        game_info.reset()
+        game_info.next_lap()
         player_car.reset()
-        computer_car.reset()
-        computer_car1.reset()
-        computer_car2.reset()
+        computer_car.reset(game_info.lap)
+        computer_car1.reset(game_info.lap)
+        computer_car2.reset(game_info.lap)
         pipidastr.reset()
+    if computer_finish_poi_collide1 is not None:
+        blit_text_center(WIN, MAIN_FONT, "You lose!")
+        pygame.display.update()
+        pygame.time.wait(5000)
+        game_info.next_lap()
+        player_car.reset()
+        computer_car.reset(game_info.lap)
+        computer_car1.reset(game_info.lap)
+        computer_car2.reset(game_info.lap)
+        pipidastr.reset()
+    if computer_finish_poi_collide2 is not None:
+        blit_text_center(WIN, MAIN_FONT, "You lose!")
+        pygame.display.update()
+        pygame.time.wait(5000)
+        game_info.next_lap()
+        player_car.reset()
+        computer_car.reset(game_info.lap)
+        computer_car1.reset(game_info.lap)
+        computer_car2.reset(game_info.lap)
+        pipidastr.reset(game_info.lap)
 
     player_finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
     if player_finish_poi_collide is not None:
@@ -406,6 +431,15 @@ player_car = PlayerCar(8, 8, (880, 445))
 computer_car = ComputerCar(1.4, 1.4, (820, 400), PATH)
 computer_car1 = ComputerCar(1.4, 1.4, (860, 400), PATH1)
 computer_car2 = ComputerCar(1.4, 1.4, (860, 445), PATH2)
+
+randomSpeed = random.randint(10,20)/10
+randomSpeed1 = random.randint(10,20)/10
+randomSpeed2 = random.randint(10,20)/10
+player_car = PlayerCar(8, 8, (880, 445))
+computer_car = ComputerCar(randomSpeed, randomSpeed, (820, 400), PATH)
+computer_car1 = ComputerCar(randomSpeed1, randomSpeed1, (860, 400), PATH1)
+computer_car2 = ComputerCar(randomSpeed2, randomSpeed2, (860, 445), PATH2)
+
 police_car = PoliceCar(1.5, 1.5, (350, 120))
 pipidastr = Pedestrians(1.5, 1.5, (100, 100), PATH3)
 game_info = GameInfo()
@@ -455,15 +489,13 @@ while run:
     handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
 
     if game_info.game_finished():
-        blit_text_center(WIN, MAIN_FONT, "WIN!")
+        blit_text_center(WIN, MAIN_FONT, "You won the game!")
         pygame.time.wait(5000)
-        pygame.display.update()
         game_info.reset()
         player_car.reset()
         computer_car.reset()
         computer_car1.reset()
         computer_car2.reset()
-        pipidastr.reset()
 
-print(computer_car.path)
+#print(computer_car.path)
 pygame.quit()
