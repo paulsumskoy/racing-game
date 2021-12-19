@@ -37,6 +37,7 @@ PATH_COIN = ((416, 223), (187, 379), (534, 554), (174, 530), (715, 619))
 BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
 POLICE_CAR = scale_image(pygame.image.load("imgs/police.png"), 0.18)
+PEDESTRIANS = scale_image(pygame.image.load("imgs/pedestrians.png"), 0.08)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -47,6 +48,11 @@ MAIN_FONT = pygame.font.SysFont("comicsans", 44)
 FPS = 60
 PATH = (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
     120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
+PATH1 = (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
+    120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
+PATH2 = (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
+    120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
+PATH3 = (0, 0), (100, 100)
 
 
 class GameInfo:
@@ -169,7 +175,7 @@ class ComputerCar(AbstractCar):
 
     def draw(self, win):
         super().draw(win)
-        # self.draw_points(win)
+        self.draw_points(win)
 
     def calculate_angle(self):
         target_x, target_y = self.path[self.current_point]
@@ -227,8 +233,66 @@ class PoliceCar(AbstractCar):
     IMG = POLICE_CAR
     #START_POS = (350, 120)
 
+class Pedestrians(AbstractCar):
+    IMG = PEDESTRIANS
+    #START_POS = (150, 200)
 
-def draw(win, images, player_car, computer_car, computer_car1, computer_car2, police_car, game_info):
+    def __init__(self, max_vel, rotation_vel, spawn_position, path=[]):
+        super().__init__(max_vel, rotation_vel, spawn_position)
+        self.path = path
+        self.current_point = 0
+        self.vel = max_vel
+
+    def draw_points(self, win):
+        for point in self.path:
+            pygame.draw.circle(win, (255, 0, 0), point, 5)
+
+    def draw(self, win):
+        super().draw(win)
+        #self.draw_points(win)
+
+    def calculate_angle(self):
+        target_x, target_y = self.path[self.current_point]
+        x_diff = target_x - self.x
+        y_diff = target_y - self.y
+
+        if y_diff == 0:
+            desired_radian_angle = math.pi / 2
+        else:
+            desired_radian_angle = math.atan(x_diff / y_diff)
+
+        if target_y > self.y:
+            desired_radian_angle += math.pi
+
+        difference_in_angle = self.angle - math.degrees(desired_radian_angle)
+        if difference_in_angle >= 180:
+            difference_in_angle -= 360
+
+        if difference_in_angle > 0:
+            self.angle -= min(self.rotation_vel, abs(difference_in_angle))
+        else:
+            self.angle += min(self.rotation_vel, abs(difference_in_angle))
+
+    def update_path_point(self):
+        target = self.path[self.current_point]
+        rect = pygame.Rect(self.x, self.y, self.img.get_width(), self.img.get_height())
+        if rect.collidepoint(*target):
+            self.current_point += 1
+
+    def move(self):
+        if self.current_point >= len(self.path):
+            return
+
+        self.calculate_angle()
+        self.update_path_point()
+        super().move()
+
+    def next_lap(self, lap):
+        self.reset()
+        self.vel = self.max_vel + (lap - 1) * 0.02
+        self.current_point = 0
+
+def draw(win, images, player_car, computer_car, computer_car1, computer_car2, police_car, pipidastr, game_info):
     for img, pos in images:
         win.blit(img, pos)
 
@@ -246,6 +310,7 @@ def draw(win, images, player_car, computer_car, computer_car1, computer_car2, po
     computer_car1.draw(win)
     computer_car2.draw(win)
     police_car.draw(win)
+    pipidastr.draw(win)
     pygame.display.update()
 
 
@@ -293,7 +358,7 @@ def coin_collision(player_car):
         coin5.passed = True
 
 
-def handle_collision(player_car, computer_car, computer_car1, computer_car2, game_info):
+def handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
     if computer_finish_poi_collide is not None:
         blit_text_center(WIN, MAIN_FONT, "You lose!")
@@ -304,6 +369,7 @@ def handle_collision(player_car, computer_car, computer_car1, computer_car2, gam
         computer_car.reset()
         computer_car1.reset()
         computer_car2.reset()
+        pipidastr.reset()
 
     player_finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
     if player_finish_poi_collide is not None:
@@ -333,10 +399,11 @@ images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (COIN1, P
           (COIN1, PATH_COIN[2]), (COIN1, PATH_COIN[3]), (COIN1, PATH_COIN[4]), (GRASS_BORDER, (0, 0)), ]
 # (COIN3, COIN3_POSITION),(COIN4, COIN4_POSITION),(COIN5, COIN5_POSITION)
 player_car = PlayerCar(8, 8, (880, 445))
-computer_car = ComputerCar(1.4, 1.4, (820, 400), PATH)
-computer_car1 = ComputerCar(1.4, 1.4, (860, 400), PATH)
-computer_car2 = ComputerCar(1.4, 1.4, (860, 445), PATH)
+computer_car = ComputerCar(1.4, 1.4, (820, 400))
+computer_car1 = ComputerCar(1.4, 1.4, (860, 400), PATH1)
+computer_car2 = ComputerCar(1.4, 1.4, (860, 445), PATH2)
 police_car = PoliceCar(1.5, 1.5, (350, 120))
+pipidastr = Pedestrians(1.5, 1.5, (100, 100), PATH3)
 game_info = GameInfo()
 
 # (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
@@ -351,7 +418,7 @@ coin5 = Coins(PATH_COIN[4][0], PATH_COIN[0][1])
 while run:
     clock.tick(FPS)
 
-    draw(WIN, images, player_car, computer_car, computer_car1, computer_car2, police_car, game_info)
+    draw(WIN, images, player_car, computer_car, computer_car1, computer_car2, police_car, pipidastr, game_info)
 
     while not game_info.started:
         blit_text_center(WIN, MAIN_FONT, f"Press any key to start race {game_info.lap}!")
@@ -369,18 +436,19 @@ while run:
             run = False
             break
 
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-        # pos = pygame.mouse.get_pos()
-        # computer_car.path.append(pos)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+          pos = pygame.mouse.get_pos()
+          computer_car.path.append(pos)
 
     move_player(player_car)
     computer_car.move()
     computer_car1.move()
     computer_car2.move()
+    pipidastr.move()
 
     coin_collision(player_car)
 
-    handle_collision(player_car, computer_car, computer_car1, computer_car2, game_info)
+    handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
 
     if game_info.game_finished():
         blit_text_center(WIN, MAIN_FONT, "WIN!")
@@ -391,6 +459,7 @@ while run:
         computer_car.reset()
         computer_car1.reset()
         computer_car2.reset()
+        pipidastr.reset()
 
-# print(computer_car.path)
+print(computer_car.path)
 pygame.quit()
