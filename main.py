@@ -340,11 +340,11 @@ game_info = GameInfo()
 # (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
 #     120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
 
-coin1 = Coins(416, 223)
-coin2 = Coins(187, 379)
-coin3 = Coins(534, 554)
-coin4 = Coins(174, 530)
-coin5 = Coins(715, 619)
+coin1 = Coins(PATH_COIN[0][0], PATH_COIN[0][1])
+coin2 = Coins(PATH_COIN[1][0], PATH_COIN[0][1])
+coin3 = Coins(PATH_COIN[2][0], PATH_COIN[0][1])
+coin4 = Coins(PATH_COIN[3][0], PATH_COIN[0][1])
+coin5 = Coins(PATH_COIN[4][0], PATH_COIN[0][1])
 
 while run:
     clock.tick(FPS)
