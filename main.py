@@ -80,13 +80,15 @@ class GameInfo:
 
 
 class AbstractCar:
-    def __init__(self, max_vel, rotation_vel):
+    def __init__(self, max_vel, rotation_vel, spawn_position):
         self.img = self.IMG
         self.max_vel = max_vel
         self.vel = 0
         self.rotation_vel = rotation_vel
         self.angle = 0
-        self.x, self.y = self.START_POS
+        self.x = spawn_position[0]
+        self.y = spawn_position[1]
+        self.spawnPos = spawn_position
         self.acceleration = 0.02
 
     def rotate(self, left=False, right=False):
@@ -121,14 +123,14 @@ class AbstractCar:
         return poi
 
     def reset(self):
-        self.x, self.y = self.START_POS
+        self.x, self.y = self.spawnPos
         self.angle = 0
         self.vel = 0
 
 
 class PlayerCar(AbstractCar):
     IMG = BLUE_CAR
-    START_POS = (860, 445)
+    #START_POS = (860, 445)
 
     def reduce_speed(self, slowdown):
         self.vel = max(self.vel - self.acceleration / slowdown, 0)
@@ -153,10 +155,10 @@ class PlayerCar(AbstractCar):
 
 class ComputerCar(AbstractCar):
     IMG = FREE_CAR
-    START_POS = (880, 445)
+    #START_POS = (880, 445)
 
-    def __init__(self, max_vel, rotation_vel, path=[]):
-        super().__init__(max_vel, rotation_vel)
+    def __init__(self, max_vel, rotation_vel, spawn_position, path=[]):
+        super().__init__(max_vel, rotation_vel, spawn_position)
         self.path = path
         self.current_point = 0
         self.vel = max_vel
@@ -223,10 +225,10 @@ class Coins:
 
 class PoliceCar(AbstractCar):
     IMG = POLICE_CAR
-    START_POS = (350, 120)
+    #START_POS = (350, 120)
 
 
-def draw(win, images, player_car, computer_car, police_car, game_info):
+def draw(win, images, player_car, computer_car, computer_car1, computer_car2, police_car, game_info):
     for img, pos in images:
         win.blit(img, pos)
 
@@ -241,6 +243,8 @@ def draw(win, images, player_car, computer_car, police_car, game_info):
 
     player_car.draw(win)
     computer_car.draw(win)
+    computer_car1.draw(win)
+    computer_car2.draw(win)
     police_car.draw(win)
     pygame.display.update()
 
@@ -304,7 +308,7 @@ def coin_collision(player_car):
         # монетка пропадает
 
 
-def handle_collision(player_car, computer_car, game_info):
+def handle_collision(player_car, computer_car, computer_car1, computer_car2, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
     if computer_finish_poi_collide is not None:
         blit_text_center(WIN, MAIN_FONT, "You lose!")
@@ -313,6 +317,8 @@ def handle_collision(player_car, computer_car, game_info):
         game_info.reset()
         player_car.reset()
         computer_car.reset()
+        computer_car1.reset()
+        computer_car2.reset()
 
     player_finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
     if player_finish_poi_collide is not None:
@@ -323,6 +329,8 @@ def handle_collision(player_car, computer_car, game_info):
                 game_info.next_lap()
                 player_car.reset()
                 computer_car.next_lap(game_info.lap)
+                computer_car1.next_lap(game_info.lap)
+                computer_car2.next_lap(game_info.lap)
                 coin1.passed = False
                 coin2.passed = False
                 coin3.passed = False
@@ -339,9 +347,11 @@ clock = pygame.time.Clock()
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (COIN1, PATH_COIN[0]), (COIN1, PATH_COIN[1]),
           (COIN1, PATH_COIN[2]), (COIN1, PATH_COIN[3]), (COIN1, PATH_COIN[4]), (GRASS_BORDER, (0, 0)), ]
 # (COIN3, COIN3_POSITION),(COIN4, COIN4_POSITION),(COIN5, COIN5_POSITION)
-player_car = PlayerCar(8, 8)
-computer_car = ComputerCar(1.4, 1.4, PATH)
-police_car = PoliceCar(1.5, 1.5)
+player_car = PlayerCar(8, 8, (860, 445))
+computer_car = ComputerCar(1.4, 1.4, (880, 445), PATH)
+computer_car1 = ComputerCar(1.4, 1.4, (900, 445), PATH)
+computer_car2 = ComputerCar(1.4, 1.4, (920, 445), PATH)
+police_car = PoliceCar(1.5, 1.5, (350, 120))
 game_info = GameInfo()
 
 # (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
@@ -356,7 +366,7 @@ coin5 = Coins(PATH_COIN[4][0], PATH_COIN[0][1])
 while run:
     clock.tick(FPS)
 
-    draw(WIN, images, player_car, computer_car, police_car, game_info)
+    draw(WIN, images, player_car, computer_car, computer_car1, computer_car2, police_car, game_info)
 
     while not game_info.started:
         blit_text_center(WIN, MAIN_FONT, f"Press any key to start race {game_info.lap}!")
@@ -380,10 +390,12 @@ while run:
 
     move_player(player_car)
     computer_car.move()
+    computer_car1.move()
+    computer_car2.move()
 
     coin_collision(player_car)
 
-    handle_collision(player_car, computer_car, game_info)
+    handle_collision(player_car, computer_car, computer_car1, computer_car2, game_info)
 
     if game_info.game_finished():
         blit_text_center(WIN, MAIN_FONT, "WIN!")
@@ -392,6 +404,8 @@ while run:
         game_info.reset()
         player_car.reset()
         computer_car.reset()
+        computer_car1.reset()
+        computer_car2.reset()
 
 # print(computer_car.path)
 pygame.quit()
