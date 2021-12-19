@@ -323,6 +323,11 @@ def handle_collision(player_car, computer_car, game_info):
                 game_info.next_lap()
                 player_car.reset()
                 computer_car.next_lap(game_info.lap)
+                coin1.passed = False
+                coin2.passed = False
+                coin3.passed = False
+                coin4.passed = False
+                coin5.passed = False
             else:
                 print('You cannot finish a lap without passing all coins')
                     
