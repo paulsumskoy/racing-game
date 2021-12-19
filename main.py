@@ -15,6 +15,24 @@ FINISH = scale_image(pygame.image.load("imgs/finish.png"), 0.13)
 FINISH_POSITION = (848, 450)
 FINISH_MASK = pygame.mask.from_surface(FINISH)
 
+COIN1 = scale_image(pygame.image.load("imgs/coins.png"), 0.03)
+COIN1_MASK = pygame.mask.from_surface(COIN1)
+PATH_COIN = ((416, 223), (187, 379), (534, 554), (174, 530), (715, 619))
+# COIN1_POSITION = (416, 223)
+# COIN2 = scale_image(pygame.image.load("imgs/coins.png"), 0.03)
+# COIN2_MASK = pygame.mask.from_surface(COIN1)
+# COIN2_POSITION = (187, 379)
+# COIN3 = scale_image(pygame.image.load("imgs/coins.png"), 0.03)
+# COIN3_MASK = pygame.mask.from_surface(COIN1)
+# COIN3_POSITION = (534, 554)
+# COIN4 = scale_image(pygame.image.load("imgs/coins.png"), 0.03)
+# COIN4_MASK = pygame.mask.from_surface(COIN1)
+# COIN4_POSITION = (174, 530)
+# COIN5 = scale_image(pygame.image.load("imgs/coins.png"), 0.03)
+# COIN5_MASK = pygame.mask.from_surface(COIN1)
+# COIN5_POSITION = (715, 619)
+
+
 BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
 
@@ -189,6 +207,21 @@ class ComputerCar(AbstractCar):
         self.vel = self.max_vel + (lap - 1) * 0.02
         self.current_point = 0
 
+class Coins:
+    IMG = COIN1
+
+    def __init__(self, x, y):
+        self.img = self.IMG
+        self.x, self.y = (x, y)
+        self.passed = False
+        self.mask = COIN1_MASK
+
+
+
+
+
+
+
 def draw(win, images, player_car, computer_car, game_info):
     for img, pos in images:
         win.blit(img, pos)
@@ -233,6 +266,30 @@ def move_player(player_car):
     if not moved:
         player_car.reduce_speed(2)
 
+def coin_collision(player_car):
+    player_coin1_collide = player_car.collide(COIN1_MASK, *PATH_COIN[0])
+    player_coin2_collide = player_car.collide(COIN1_MASK, *PATH_COIN[1])
+    player_coin3_collide = player_car.collide(COIN1_MASK, *PATH_COIN[2])
+    player_coin4_collide = player_car.collide(COIN1_MASK, *PATH_COIN[3])
+    player_coin5_collide = player_car.collide(COIN1_MASK, *PATH_COIN[4])
+    if player_coin1_collide != None:
+        coin1.passed = True
+        # монетка пропадает
+    if player_coin2_collide != None:
+        COIN2.passed = True
+        # монетка пропадает
+    if player_coin3_collide != None:
+        COIN3.passed = True
+        # монетка пропадает
+    if player_coin4_collide != None:
+        COIN4.passed = True
+        # монетка пропадает
+    if player_coin5_collide != None:
+        COIN5.passed = True
+        # монетка пропадает
+
+
+
 
 def handle_collision(player_car, computer_car, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
@@ -257,10 +314,17 @@ def handle_collision(player_car, computer_car, game_info):
 
 run = True
 clock = pygame.time.Clock()
-images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (GRASS_BORDER, (0, 0))]
+images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION),(COIN1, PATH_COIN[0]), (GRASS_BORDER, (0, 0)), ]
+# (COIN3, COIN3_POSITION),(COIN4, COIN4_POSITION),(COIN5, COIN5_POSITION)
 player_car = PlayerCar(8, 8)
 computer_car = ComputerCar(1.4, 1.4, PATH)
 game_info = GameInfo()
+
+# (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
+#     120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
+
+coin1 = Coins(416, 223);
+
 
 while run:
     clock.tick(FPS)
@@ -289,6 +353,8 @@ while run:
 
     move_player(player_car)
     computer_car.move()
+
+    coin_collision(player_car)
 
     handle_collision(player_car, computer_car, game_info)
     
