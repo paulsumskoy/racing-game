@@ -37,7 +37,7 @@ PATH_COIN = ((416, 223), (187, 379), (534, 554), (174, 530), (715, 619))
 BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
 POLICE_CAR = scale_image(pygame.image.load("imgs/police.png"), 0.18)
-PEDESTRIANS = scale_image(pygame.image.load("imgs/pedestrians.png"), 0.08)
+PEDESTRIANS = scale_image(pygame.image.load("imgs/pedestrians.png"), 0.05)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -229,6 +229,24 @@ class Coins:
         self.x, self.y = (x, y)
         self.passed = False
         self.mask = COIN1_MASK
+
+
+def arrested(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
+    if player_car.vel > 1:
+        blit_text_center(WIN, MAIN_FONT, "You arrested!")
+        pygame.display.update()
+        pygame.time.wait(5000)
+        game_info.next_lap()
+        player_car.reset()
+        computer_car.reset(game_info.lap)
+        computer_car1.reset(game_info.lap)
+        computer_car2.reset(game_info.lap)
+        pipidastr.reset()
+        coin1.passed = False
+        coin2.passed = False
+        coin3.passed = False
+        coin4.passed = False
+        coin5.passed = False
 
 
 class PoliceCar(AbstractCar):
@@ -432,9 +450,9 @@ computer_car = ComputerCar(1.4, 1.4, (820, 400), PATH)
 computer_car1 = ComputerCar(1.4, 1.4, (860, 400), PATH1)
 computer_car2 = ComputerCar(1.4, 1.4, (860, 445), PATH2)
 
-randomSpeed = random.randint(10,20)/10
-randomSpeed1 = random.randint(10,20)/10
-randomSpeed2 = random.randint(10,20)/10
+randomSpeed = random.randint(10, 20) / 10
+randomSpeed1 = random.randint(10, 20) / 10
+randomSpeed2 = random.randint(10, 20) / 10
 player_car = PlayerCar(8, 8, (880, 445))
 computer_car = ComputerCar(randomSpeed, randomSpeed, (820, 400), PATH)
 computer_car1 = ComputerCar(randomSpeed1, randomSpeed1, (860, 400), PATH1)
@@ -468,7 +486,7 @@ while run:
 
             if event.type == pygame.KEYDOWN:
                 game_info.start_lap()
-        
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -497,5 +515,5 @@ while run:
         computer_car1.reset()
         computer_car2.reset()
 
-#print(computer_car.path)
+# print(computer_car.path)
 pygame.quit()
