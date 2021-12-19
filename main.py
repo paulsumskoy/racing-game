@@ -239,10 +239,9 @@ def arrested(player_car, computer_car, computer_car1, computer_car2, pipidastr, 
         pygame.time.wait(5000)
         game_info.next_lap()
         player_car.reset()
-        computer_car.reset()
-        computer_car1.reset()
-        computer_car2.reset()
-        pipidastr.reset()
+        computer_car.next_lap(game_info.lap)
+        computer_car1.next_lap(game_info.lap)
+        computer_car2.next_lap(game_info.lap)
         coin1.passed = False
         coin2.passed = False
         coin3.passed = False
