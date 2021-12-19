@@ -136,15 +136,16 @@ class PlayerCar(AbstractCar):
 
     def increase_speed(self):
         self.max_vel = 2.5
-        if self.collide(GRASS_BORDER_MASK) != None:
-          self.max_vel = 1
+        if self.collide(GRASS_BORDER_MASK) is not None:
+            self.max_vel = 1
 
     def return_max_speed(self):
         self.max_vel = 1.5
-        if self.collide(GRASS_BORDER_MASK) != None:
-          self.max_vel = 0.75
+        if self.collide(GRASS_BORDER_MASK) is not None:
+            self.max_vel = 0.75
         else:
-          self.max_vel = 1.5
+            self.max_vel = 1.5
+
     def bounce(self):
         self.vel = -self.vel
         self.move()
@@ -203,11 +204,12 @@ class ComputerCar(AbstractCar):
         self.calculate_angle()
         self.update_path_point()
         super().move()
-        
+
     def next_lap(self, lap):
         self.reset()
         self.vel = self.max_vel + (lap - 1) * 0.02
         self.current_point = 0
+
 
 class Coins:
     IMG = COIN1
@@ -219,19 +221,15 @@ class Coins:
         self.mask = COIN1_MASK
 
 
-
-
-
-
-
 class PoliceCar(AbstractCar):
     IMG = POLICE_CAR
     START_POS = (350, 120)
 
+
 def draw(win, images, player_car, computer_car, police_car, game_info):
     for img, pos in images:
         win.blit(img, pos)
-        
+
     lap_text = MAIN_FONT.render(f"Lap {game_info.lap}", 1, (255, 255, 255))
     win.blit(lap_text, (10, HEIGHT - lap_text.get_height() - 80))
 
@@ -240,7 +238,6 @@ def draw(win, images, player_car, computer_car, police_car, game_info):
 
     vel_text = MAIN_FONT.render(f"Vel: {round(player_car.vel, 1)}px/s", 1, (255, 255, 255))
     win.blit(vel_text, (10, HEIGHT - vel_text.get_height() - 0))
-
 
     player_car.draw(win)
     computer_car.draw(win)
@@ -263,16 +260,15 @@ def move_player(player_car):
             player_car.return_max_speed()
         player_car.move_forward()
     else:
-        if player_car.collide(GRASS_BORDER_MASK) != None:
-          player_car.max_vel = 0.75
+        if player_car.collide(GRASS_BORDER_MASK) is not None:
+            player_car.max_vel = 0.75
         else:
-          player_car.max_vel = 1.5
+            player_car.max_vel = 1.5
     if keys[pygame.K_s]:
         moved = True
         player_car.move_backward()
     if not moved:
         player_car.reduce_speed(2)
-
 
 
 def coin_collision(player_car):
@@ -282,38 +278,36 @@ def coin_collision(player_car):
     player_coin3_collide = player_car.collide(COIN1_MASK, *PATH_COIN[2])
     player_coin4_collide = player_car.collide(COIN1_MASK, *PATH_COIN[3])
     player_coin5_collide = player_car.collide(COIN1_MASK, *PATH_COIN[4])
-    if player_coin1_collide != None:
+    if player_coin1_collide is not None:
         coin1.passed = True
         print(coin1.passed)
         print('1-ok')
         # монетка пропадает
-    if player_coin2_collide != None:
+    if player_coin2_collide is not None:
         coin2.passed = True
         print(coin2.passed)
         print('2-ok')
         # монетка пропадает
-    if player_coin3_collide != None:
+    if player_coin3_collide is not None:
         coin3.passed = True
         print(coin3.passed)
         print('3-ok')
         # монетка пропадает
-    if player_coin4_collide != None:
+    if player_coin4_collide is not None:
         coin4.passed = True
         print(coin4.passed)
         print('4-ok')
         # монетка пропадает
-    if player_coin5_collide != None:
+    if player_coin5_collide is not None:
         coin5.passed = True
         print(coin5.passed)
         print('5-ok')
         # монетка пропадает
 
 
-
-
 def handle_collision(player_car, computer_car, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
-    if computer_finish_poi_collide != None:
+    if computer_finish_poi_collide is not None:
         blit_text_center(WIN, MAIN_FONT, "You lose!")
         pygame.display.update()
         pygame.time.wait(5000)
@@ -322,7 +316,7 @@ def handle_collision(player_car, computer_car, game_info):
         computer_car.reset()
 
     player_finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
-    if player_finish_poi_collide != None:
+    if player_finish_poi_collide is not None:
         if player_finish_poi_collide[1] == 24:
             player_car.bounce()
         else:
@@ -338,7 +332,8 @@ def handle_collision(player_car, computer_car, game_info):
 
 run = True
 clock = pygame.time.Clock()
-images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION),(COIN1, PATH_COIN[0]), (COIN1, PATH_COIN[1]), (COIN1, PATH_COIN[2]), (COIN1, PATH_COIN[3]), (COIN1, PATH_COIN[4]), (GRASS_BORDER, (0, 0)), ]
+images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (COIN1, PATH_COIN[0]), (COIN1, PATH_COIN[1]),
+          (COIN1, PATH_COIN[2]), (COIN1, PATH_COIN[3]), (COIN1, PATH_COIN[4]), (GRASS_BORDER, (0, 0)), ]
 # (COIN3, COIN3_POSITION),(COIN4, COIN4_POSITION),(COIN5, COIN5_POSITION)
 player_car = PlayerCar(8, 8)
 computer_car = ComputerCar(1.4, 1.4, PATH)
@@ -348,11 +343,11 @@ game_info = GameInfo()
 # (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
 #     120, 711), (600, 755), (715, 619), (848, 573), (864, 399)
 
-coin1 = Coins(416, 223)
-coin2 = Coins(187, 379)
-coin3 = Coins(534, 554)
-coin4 = Coins(174, 530)
-coin5 = Coins(715, 619)
+coin1 = Coins(PATH_COIN[0][0], PATH_COIN[0][1])
+coin2 = Coins(PATH_COIN[1][0], PATH_COIN[0][1])
+coin3 = Coins(PATH_COIN[2][0], PATH_COIN[0][1])
+coin4 = Coins(PATH_COIN[3][0], PATH_COIN[0][1])
+coin5 = Coins(PATH_COIN[4][0], PATH_COIN[0][1])
 
 while run:
     clock.tick(FPS)
@@ -375,9 +370,9 @@ while run:
             run = False
             break
 
-        #if event.type == pygame.MOUSEBUTTONDOWN:
-            #pos = pygame.mouse.get_pos()
-            #computer_car.path.append(pos)
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        # pos = pygame.mouse.get_pos()
+        # computer_car.path.append(pos)
 
     move_player(player_car)
     computer_car.move()
@@ -385,14 +380,14 @@ while run:
     coin_collision(player_car)
 
     handle_collision(player_car, computer_car, game_info)
-    
-    if game_info.game_finished():        
+
+    if game_info.game_finished():
         blit_text_center(WIN, MAIN_FONT, "WIN!")
         pygame.time.wait(5000)
         pygame.display.update()
         game_info.reset()
         player_car.reset()
         computer_car.reset()
-        
-#print(computer_car.path)
+
+# print(computer_car.path)
 pygame.quit()
