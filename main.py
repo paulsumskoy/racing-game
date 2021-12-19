@@ -37,7 +37,7 @@ PATH_COIN = ((416, 223), (187, 379), (534, 554), (174, 530), (715, 619))
 BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
 POLICE_CAR = scale_image(pygame.image.load("imgs/police.png"), 0.18)
-PEDESTRIANS = scale_image(pygame.image.load("imgs/pedestrians.png"), 0.05)
+PEDESTRIANS = scale_image(pygame.image.load("imgs/pedestrians.png"), 0.045)
 POLICE_RECT = pygame.Rect(287, 156, 160, 110)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
@@ -53,7 +53,8 @@ PATH1 = (765, 370), (581, 371), (411, 234), (154, 214), (182, 399), (329, 363), 
     135, 517), (144, 749), (648, 748), (752, 589), (890, 527), (891, 483)
 PATH2 = (599, 397), (461, 254), (181, 205), (256, 381), (355, 369), (546, 596), (355, 627), (233, 635), (157, 526), (
     127, 711), (358, 760), (684, 699), (740, 600)
-PATH3 = (0, 0), (100, 100)
+PATH3 = (744, 355), (497, 376), (457, 211), (190, 251), (151, 422), (388, 358), (515, 586), (366, 678), (210, 681), (195, 523), (124, 781), (315, 710), (586, 
+803), (628, 672), (791, 647), (719, 427)
 
 
 class GameInfo:
@@ -232,7 +233,7 @@ class Coins:
         self.mask = COIN1_MASK
 
 
-def arrested(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
+def arrested(player_car, computer_car, computer_car1, computer_car2, pedestrian, game_info):
     if player_car.vel > 1.55:
         blit_text_center(WIN, MAIN_FONT, "You arrested!")
         pygame.display.update()
@@ -315,7 +316,7 @@ class Pedestrians(AbstractCar):
         self.current_point = 0
 
 
-def draw(win, images, player_car, computer_car, computer_car1, computer_car2, police_car, pipidastr, game_info):
+def draw(win, images, player_car, computer_car, computer_car1, computer_car2, police_car, pedestrian, game_info):
     for img, pos in images:
         win.blit(img, pos)
 
@@ -333,7 +334,7 @@ def draw(win, images, player_car, computer_car, computer_car1, computer_car2, po
     computer_car1.draw(win)
     computer_car2.draw(win)
     police_car.draw(win)
-    pipidastr.draw(win)
+    pedestrian.draw(win)
     pygame.display.update()
 
 
@@ -381,12 +382,12 @@ def coin_collision(player_car):
     if player_coin5_collide is not None:
         coin5.passed = True
 
-def policeman_colision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
+def policeman_colision(player_car, computer_car, computer_car1, computer_car2, pedestrian, game_info):
     target = (player_car.x, player_car.y)
     if POLICE_RECT.collidepoint(*target):
-        arrested(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
+        arrested(player_car, computer_car, computer_car1, computer_car2, pedestrian, game_info)
 
-def handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
+def handle_collision(player_car, computer_car, computer_car1, computer_car2, pedestrian, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
     computer_finish_poi_collide1 = computer_car1.collide(FINISH_MASK, *FINISH_POSITION)
     computer_finish_poi_collide2 = computer_car2.collide(FINISH_MASK, *FINISH_POSITION)
@@ -400,7 +401,7 @@ def handle_collision(player_car, computer_car, computer_car1, computer_car2, pip
         computer_car.reset(game_info.lap)
         computer_car1.reset(game_info.lap)
         computer_car2.reset(game_info.lap)
-        pipidastr.reset()
+        pedestrian.reset()
     if computer_finish_poi_collide1 is not None:
         blit_text_center(WIN, MAIN_FONT, "You lose!")
         pygame.display.update()
@@ -410,7 +411,7 @@ def handle_collision(player_car, computer_car, computer_car1, computer_car2, pip
         computer_car.reset(game_info.lap)
         computer_car1.reset(game_info.lap)
         computer_car2.reset(game_info.lap)
-        pipidastr.reset()
+        pedestrian.reset()
     if computer_finish_poi_collide2 is not None:
         blit_text_center(WIN, MAIN_FONT, "You lose!")
         pygame.display.update()
@@ -420,7 +421,7 @@ def handle_collision(player_car, computer_car, computer_car1, computer_car2, pip
         computer_car.reset(game_info.lap)
         computer_car1.reset(game_info.lap)
         computer_car2.reset(game_info.lap)
-        pipidastr.reset(game_info.lap)
+        pedestrian.reset(game_info.lap)
 
     player_finish_poi_collide = player_car.collide(FINISH_MASK, *FINISH_POSITION)
     if player_finish_poi_collide is not None:
@@ -458,7 +459,7 @@ computer_car1 = ComputerCar(randomSpeed1, randomSpeed1, (860, 400), PATH1)
 computer_car2 = ComputerCar(randomSpeed2, randomSpeed2, (860, 445), PATH2)
 
 police_car = PoliceCar(1.5, 1.5, (350, 120))
-pipidastr = Pedestrians(1.5, 1.5, (100, 100), PATH3)
+pedestrian = Pedestrians(1.5, 1.5, (800, 500), PATH3)
 game_info = GameInfo()
 
 # (600, 363), (416, 223), (145, 195), (187, 379), (358, 383), (534, 554), (422, 633), (264, 642), (174, 530), (
@@ -473,7 +474,7 @@ coin5 = Coins(PATH_COIN[4][0], PATH_COIN[0][1])
 while run:
     clock.tick(FPS)
 
-    draw(WIN, images, player_car, computer_car, computer_car1, computer_car2, police_car, pipidastr, game_info)
+    draw(WIN, images, player_car, computer_car, computer_car1, computer_car2, police_car, pedestrian, game_info)
 
     while not game_info.started:
         blit_text_center(WIN, MAIN_FONT, f"Press any key to start race {game_info.lap}!")
@@ -499,12 +500,12 @@ while run:
     computer_car.move()
     computer_car1.move()
     computer_car2.move()
-    pipidastr.move()
+    pedestrian.move()
 
     coin_collision(player_car)
 
-    handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
-    policeman_colision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
+    handle_collision(player_car, computer_car, computer_car1, computer_car2, pedestrian, game_info)
+    policeman_colision(player_car, computer_car, computer_car1, computer_car2, pedestrian, game_info)
 
     if game_info.game_finished():
         blit_text_center(WIN, MAIN_FONT, "You won the game!")
