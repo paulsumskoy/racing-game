@@ -272,7 +272,6 @@ def move_player(player_car):
 
 
 def coin_collision(player_car):
-    count = 0
     player_coin1_collide = player_car.collide(COIN1_MASK, *PATH_COIN[0])
     player_coin2_collide = player_car.collide(COIN1_MASK, *PATH_COIN[1])
     player_coin3_collide = player_car.collide(COIN1_MASK, *PATH_COIN[2])
