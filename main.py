@@ -38,6 +38,7 @@ BLUE_CAR = scale_image(pygame.image.load("imgs/blue-car.png"), 0.33)
 FREE_CAR = scale_image(pygame.image.load("imgs/free-car.png"), 0.33)
 POLICE_CAR = scale_image(pygame.image.load("imgs/police.png"), 0.18)
 PEDESTRIANS = scale_image(pygame.image.load("imgs/pedestrians.png"), 0.05)
+POLICE_RECT = pygame.Rect(287, 156, 160, 110)
 
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -232,15 +233,15 @@ class Coins:
 
 
 def arrested(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
-    if player_car.vel > 1:
+    if player_car.vel > 1.55:
         blit_text_center(WIN, MAIN_FONT, "You arrested!")
         pygame.display.update()
         pygame.time.wait(5000)
         game_info.next_lap()
         player_car.reset()
-        computer_car.reset(game_info.lap)
-        computer_car1.reset(game_info.lap)
-        computer_car2.reset(game_info.lap)
+        computer_car.reset()
+        computer_car1.reset()
+        computer_car2.reset()
         pipidastr.reset()
         coin1.passed = False
         coin2.passed = False
@@ -381,6 +382,10 @@ def coin_collision(player_car):
     if player_coin5_collide is not None:
         coin5.passed = True
 
+def policeman_colision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
+    target = (player_car.x, player_car.y)
+    if POLICE_RECT.collidepoint(*target):
+        arrested(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
 
 def handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info):
     computer_finish_poi_collide = computer_car.collide(FINISH_MASK, *FINISH_POSITION)
@@ -445,11 +450,6 @@ clock = pygame.time.Clock()
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)), (FINISH, FINISH_POSITION), (COIN1, PATH_COIN[0]), (COIN1, PATH_COIN[1]),
           (COIN1, PATH_COIN[2]), (COIN1, PATH_COIN[3]), (COIN1, PATH_COIN[4]), (GRASS_BORDER, (0, 0)), ]
 # (COIN3, COIN3_POSITION),(COIN4, COIN4_POSITION),(COIN5, COIN5_POSITION)
-player_car = PlayerCar(8, 8, (880, 445))
-computer_car = ComputerCar(1.4, 1.4, (820, 400), PATH)
-computer_car1 = ComputerCar(1.4, 1.4, (860, 400), PATH1)
-computer_car2 = ComputerCar(1.4, 1.4, (860, 445), PATH2)
-
 randomSpeed = random.randint(10, 20) / 10
 randomSpeed1 = random.randint(10, 20) / 10
 randomSpeed2 = random.randint(10, 20) / 10
@@ -492,9 +492,9 @@ while run:
             run = False
             break
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            computer_car.path.append(pos)
+        #if event.type == pygame.MOUSEBUTTONDOWN:
+        #    pos = pygame.mouse.get_pos()
+        #    computer_car.path.append(pos)
 
     move_player(player_car)
     computer_car.move()
@@ -505,6 +505,7 @@ while run:
     coin_collision(player_car)
 
     handle_collision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
+    policeman_colision(player_car, computer_car, computer_car1, computer_car2, pipidastr, game_info)
 
     if game_info.game_finished():
         blit_text_center(WIN, MAIN_FONT, "You won the game!")
